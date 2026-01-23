@@ -1,51 +1,64 @@
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold mb-0">Team Members</h2>
-            <p class="text-muted">Manage your employees.</p>
-        </div>
-        <button routerLink="/add" class="btn btn-primary shadow-sm">
-            <i class="fas fa-plus me-2"></i> Add Employee
-        </button>
+<div class="container animate-slide-in">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h1 class="mb-1">Overview</h1>
+      <p class="text-muted-custom">Manage your team members</p>
     </div>
+    <a routerLink="/add" class="btn-mat text-decoration-none d-none d-md-block">
+      <span class="material-icons" style="vertical-align: middle; font-size: 20px;">add</span> 
+      Add Employee
+    </a>
+  </div>
 
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <table class="table table-hover mb-0 align-middle">
-            <thead class="bg-light">
-                <tr>
-                    <th class="ps-4 py-3 text-secondary text-uppercase font-size-sm">Employee</th>
-                    <th class="text-secondary text-uppercase font-size-sm">Role</th>
-                    <th class="text-secondary text-uppercase font-size-sm">Status</th>
-                    <th class="text-end pe-4 text-secondary text-uppercase font-size-sm">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let emp of employees">
-                    <td class="ps-4 py-3">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar-circle me-3">{{emp.firstName.charAt(0)}}{{emp.lastName.charAt(0)}}</div>
-                            <div>
-                                <div class="fw-bold text-dark">{{emp.firstName}} {{emp.lastName}}</div>
-                                <div class="text-muted small">{{emp.email}}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="fw-medium">{{emp.role}}</div>
-                        <div class="text-muted small">{{emp.department}}</div>
-                    </td>
-                    <td>
-                        <span class="badge rounded-pill" 
-                              [ngClass]="emp.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
-                            {{emp.status}}
-                        </span>
-                    </td>
-                    <td class="text-end pe-4">
-                        <a [routerLink]="['/edit', emp.id]" class="btn btn-sm btn-light text-primary me-2"><i class="fas fa-pen"></i></a>
-                        <button (click)="delete(emp.id)" class="btn btn-sm btn-light text-danger"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <a routerLink="/add" class="fab d-md-none text-decoration-none">
+    <span class="material-icons">add</span>
+  </a>
+
+  <div class="table-responsive">
+    <table class="mat-table">
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th>ROLE</th>
+          <th>STATUS</th>
+          <th class="text-end">ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emp of employees$ | async">
+          <td>
+            <div class="d-flex align-items-center">
+              <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                   style="width: 45px; height: 45px; background: var(--primary-light); color: white; font-weight: bold;">
+                {{emp.firstName[0]}}{{emp.lastName[0]}}
+              </div>
+              <div>
+                <div class="fw-bold">{{emp.firstName}} {{emp.lastName}}</div>
+                <div class="small text-muted-custom">{{emp.email}}</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="fw-medium">{{emp.role}}</div>
+            <div class="small text-muted-custom">{{emp.department}}</div>
+          </td>
+          <td>
+            <span class="badge rounded-pill" 
+                  [style.background]="emp.status === 'Active' ? 'rgba(3, 218, 198, 0.2)' : 'rgba(255, 99, 71, 0.2)'"
+                  [style.color]="emp.status === 'Active' ? '#03dac6' : 'tomato'">
+              {{emp.status}}
+            </span>
+          </td>
+          <td class="text-end">
+            <a [routerLink]="['/edit', emp.id]" class="btn btn-sm btn-mat-ghost me-2">
+              <span class="material-icons" style="font-size: 18px;">edit</span>
+            </a>
+            <button (click)="delete(emp.id)" class="btn btn-sm btn-mat-ghost text-danger">
+              <span class="material-icons" style="font-size: 18px;">delete</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

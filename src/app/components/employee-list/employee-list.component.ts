@@ -8,21 +8,20 @@ import { Employee } from '../../models/employee.model';
   selector: 'app-employee-list',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './employee-list.component.html',
-  styleUrls: ['./employee-list.component.css']
+  templateUrl: './employee-list.component.html'
 })
 export class EmployeeListComponent implements OnInit {
-  employees: Employee[] = [];
+  // Define the property, but don't assign it yet
+  employees$;
 
-  constructor(private employeeService: EmployeeService) {}
-
-  ngOnInit() {
-    this.employeeService.getEmployees().subscribe(data => this.employees = data);
+  constructor(private service: EmployeeService) {
+    // FIX: Assign it INSIDE the constructor, where 'this.service' is ready
+    this.employees$ = this.service.getEmployees();
   }
 
+  ngOnInit() {}
+
   delete(id: number) {
-    if(confirm('Delete this employee?')) {
-      this.employeeService.deleteEmployee(id);
-    }
+    if(confirm('Are you sure?')) this.service.deleteEmployee(id);
   }
 }
