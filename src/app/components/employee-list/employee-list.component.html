@@ -1,0 +1,51 @@
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0">Team Members</h2>
+            <p class="text-muted">Manage your employees.</p>
+        </div>
+        <button routerLink="/add" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus me-2"></i> Add Employee
+        </button>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="bg-light">
+                <tr>
+                    <th class="ps-4 py-3 text-secondary text-uppercase font-size-sm">Employee</th>
+                    <th class="text-secondary text-uppercase font-size-sm">Role</th>
+                    <th class="text-secondary text-uppercase font-size-sm">Status</th>
+                    <th class="text-end pe-4 text-secondary text-uppercase font-size-sm">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let emp of employees">
+                    <td class="ps-4 py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-circle me-3">{{emp.firstName.charAt(0)}}{{emp.lastName.charAt(0)}}</div>
+                            <div>
+                                <div class="fw-bold text-dark">{{emp.firstName}} {{emp.lastName}}</div>
+                                <div class="text-muted small">{{emp.email}}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="fw-medium">{{emp.role}}</div>
+                        <div class="text-muted small">{{emp.department}}</div>
+                    </td>
+                    <td>
+                        <span class="badge rounded-pill" 
+                              [ngClass]="emp.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
+                            {{emp.status}}
+                        </span>
+                    </td>
+                    <td class="text-end pe-4">
+                        <a [routerLink]="['/edit', emp.id]" class="btn btn-sm btn-light text-primary me-2"><i class="fas fa-pen"></i></a>
+                        <button (click)="delete(emp.id)" class="btn btn-sm btn-light text-danger"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

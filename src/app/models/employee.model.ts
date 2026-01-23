@@ -1,10 +1,9 @@
 export interface Employee {
-  id: number;
-  name: string;
-  email: string;
-  department: string;
-  role: string;
-  salary: number;
-  isActive: boolean;
-  dateOfJoining: Date;
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    department: string;
+    status: 'Active' | 'Inactive';
 }
