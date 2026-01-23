@@ -1,3 +1,10 @@
+#!/bin/bash
+
+echo "🔧 Fixing Layout Alignment (Switching to CSS Grid)..."
+
+# 1. UPDATE EMPLOYEE LIST (CSS Grid Implementation)
+# We replace the <table> with <div>s using CSS Grid for perfect alignment.
+cat << 'EOF' > src/app/components/employee-list/employee-list.component.html
 <div class="animate-enter" style="max-width: 1200px; margin: 0 auto;">
   
   <div class="d-flex justify-between items-center mb-4">
@@ -85,3 +92,25 @@
 </div>
 
 <app-employee-form *ngIf="showForm" [employee]="selectedEmployee" (close)="showForm = false" (saved)="onSave()"></app-employee-form>
+EOF
+
+# 2. UPDATE STYLES (Helper Utilities)
+# Ensure our utilities are bulletproof
+cat << 'EOF' >> src/styles.css
+
+/* UTILITIES (Appended via script) */
+.text-xl { font-size: 1.5rem; font-weight: 600; color: var(--text-primary); }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.text-muted { color: var(--text-muted); }
+.font-medium { font-weight: 500; }
+.uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
+.text-right { text-align: right; }
+
+.d-flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-end { justify-content: flex-end; }
+EOF
+
+echo "✅ Layout Fixed: Switched from Table to CSS Grid."

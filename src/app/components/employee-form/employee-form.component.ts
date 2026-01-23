@@ -1,63 +1,57 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
+import { Employee } from '../../models/employee.model';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <div class="container animate-slide-in" style="max-width: 600px;">
-      <div class="mat-card">
-        <h2 class="mb-4">{{isEdit ? 'Edit Profile' : 'New Team Member'}}</h2>
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 50; display: flex; align-items: center; justify-content: center;">
+      <div class="animate-enter" style="background: var(--bg-surface); width: 100%; max-width: 480px; border: 1px solid var(--border-medium); border-radius: 12px; padding: 24px; box-shadow: 0 24px 48px -12px rgba(0,0,0,0.5);">
+        
+        <div class="d-flex justify-between items-center mb-4">
+          <h2 style="font-size: 1.25rem;">{{employee ? 'Edit Member' : 'New Member'}}</h2>
+          <button class="btn-icon" (click)="close.emit()"><span class="material-icons">close</span></button>
+        </div>
         
         <form [formGroup]="form" (ngSubmit)="submit()">
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="small text-muted-custom mb-1">First Name</label>
-              <input type="text" class="mat-input" formControlName="firstName" placeholder="e.g. John">
+          <div class="d-flex gap-3 mb-4">
+            <div style="flex: 1;">
+               <label class="text-xs font-medium mb-1" style="display: block; color: var(--text-secondary);">First Name</label>
+               <input formControlName="firstName">
             </div>
-            <div class="col-md-6">
-              <label class="small text-muted-custom mb-1">Last Name</label>
-              <input type="text" class="mat-input" formControlName="lastName" placeholder="e.g. Doe">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="small text-muted-custom mb-1">Email</label>
-            <input type="email" class="mat-input" formControlName="email" placeholder="john@company.com">
-          </div>
-
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="small text-muted-custom mb-1">Department</label>
-              <select class="mat-input" formControlName="department">
-                <option>Engineering</option><option>Design</option><option>Product</option><option>HR</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="small text-muted-custom mb-1">Role</label>
-              <input type="text" class="mat-input" formControlName="role" placeholder="e.g. Developer">
+            <div style="flex: 1;">
+               <label class="text-xs font-medium mb-1" style="display: block; color: var(--text-secondary);">Last Name</label>
+               <input formControlName="lastName">
             </div>
           </div>
 
           <div class="mb-4">
-             <label class="small text-muted-custom mb-1">Status</label>
-             <div class="d-flex gap-3 mt-1">
-               <label class="d-flex align-items-center gap-2" style="cursor:pointer">
-                 <input type="radio" formControlName="status" value="Active"> Active
-               </label>
-               <label class="d-flex align-items-center gap-2" style="cursor:pointer">
-                 <input type="radio" formControlName="status" value="Inactive"> Inactive
-               </label>
+            <label class="text-xs font-medium mb-1" style="display: block; color: var(--text-secondary);">Email Address</label>
+            <input formControlName="email" type="email">
+          </div>
+
+          <div class="d-flex gap-3 mb-4">
+             <div style="flex: 1;">
+                <label class="text-xs font-medium mb-1" style="display: block; color: var(--text-secondary);">Department</label>
+                <select formControlName="department">
+                  <option>Engineering</option><option>Design</option><option>HR</option><option>Product</option>
+                </select>
+             </div>
+             <div style="flex: 1;">
+                <label class="text-xs font-medium mb-1" style="display: block; color: var(--text-secondary);">Role</label>
+                <input formControlName="role">
              </div>
           </div>
 
-          <div class="d-flex justify-content-end gap-2 mt-5">
-            <a routerLink="/" class="btn btn-mat-ghost text-decoration-none py-2 px-4 rounded-pill">Cancel</a>
-            <button type="submit" [disabled]="form.invalid" class="btn-mat">Save Changes</button>
+          <div class="d-flex justify-end gap-2 pt-3" style="border-top: 1px solid var(--border-subtle);">
+            <button type="button" class="btn-secondary" (click)="close.emit()">Cancel</button>
+            <button type="submit" class="btn-primary" [disabled]="form.invalid">
+              {{employee ? 'Save Changes' : 'Create Member'}}
+            </button>
           </div>
         </form>
       </div>
@@ -65,40 +59,29 @@ import { EmployeeService } from '../../services/employee.service';
   `
 })
 export class EmployeeFormComponent implements OnInit {
+  @Input() employee: Employee | null = null;
+  @Output() close = new EventEmitter<void>();
+  @Output() saved = new EventEmitter<void>();
   form: FormGroup;
-  isEdit = false;
-  id: number | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private service: EmployeeService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
+  constructor(private fb: FormBuilder, private service: EmployeeService) {
     this.form = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       department: ['Engineering'],
-      role: ['', Validators.required],
+      role: ['Staff'],
       status: ['Active']
     });
   }
 
-  ngOnInit() {
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
-    if (this.id) {
-      this.isEdit = true;
-      const emp = this.service.getEmployee(this.id);
-      if (emp) this.form.patchValue(emp);
-    }
-  }
+  ngOnInit() { if (this.employee) this.form.patchValue(this.employee); }
 
   submit() {
     if (this.form.valid) {
-      const data = { ...this.form.value, id: this.id || 0 };
-      this.isEdit ? this.service.updateEmployee(data) : this.service.addEmployee(data);
-      this.router.navigate(['/']);
+      const data = { ...this.form.value, id: this.employee ? this.employee.id : 0 };
+      this.employee ? this.service.updateEmployee(data) : this.service.addEmployee(data);
+      this.saved.emit();
     }
   }
 }

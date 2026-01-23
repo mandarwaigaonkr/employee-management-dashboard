@@ -1,3 +1,10 @@
+#!/bin/bash
+
+echo "🚨 Applying EMERGENCY LAYOUT FIX (Single File Component)..."
+
+# Overwrite the Employee List Component with INLINE Template & Styles
+# This guarantees the layout cannot be ignored by the browser.
+cat << 'EOF' > src/app/components/employee-list/employee-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -241,3 +248,6 @@ export class EmployeeListComponent implements OnInit {
     }
   }
 }
+EOF
+
+echo "✅ EMERGENCY FIX APPLIED. Please restart your server."
