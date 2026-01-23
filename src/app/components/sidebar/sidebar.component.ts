@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { UiService } from '../../services/ui.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   template: `
     <aside [class.collapsed]="ui.isSidebarCollapsed()">
       <div class="header">
@@ -14,19 +15,22 @@ import { UiService } from '../../services/ui.service';
       </div>
 
       <nav>
-        <div class="section-title" *ngIf="!ui.isSidebarCollapsed()">MENU</div>
+        <div class="section-title" *ngIf="!ui.isSidebarCollapsed()">MAIN MENU</div>
         
-        <a href="#" class="nav-item active">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
           <span class="material-icons">grid_view</span>
           <span *ngIf="!ui.isSidebarCollapsed()">Overview</span>
         </a>
-        <a href="#" class="nav-item">
-          <span class="material-icons">people</span>
-          <span *ngIf="!ui.isSidebarCollapsed()">Employees</span>
+
+        <a routerLink="/departments" routerLinkActive="active" class="nav-item">
+          <span class="material-icons">domain</span>
+          <span *ngIf="!ui.isSidebarCollapsed()">Departments</span>
         </a>
-        <a href="#" class="nav-item">
-          <span class="material-icons">bar_chart</span>
-          <span *ngIf="!ui.isSidebarCollapsed()">Analytics</span>
+
+        <div class="section-title mt-4" *ngIf="!ui.isSidebarCollapsed()">SYSTEM</div>
+        <a class="nav-item" style="cursor: not-allowed; opacity: 0.5;">
+          <span class="material-icons">settings</span>
+          <span *ngIf="!ui.isSidebarCollapsed()">Settings</span>
         </a>
       </nav>
 
@@ -42,7 +46,7 @@ import { UiService } from '../../services/ui.service';
   styles: [`
     aside {
       width: 260px; height: 100%;
-      background-color: var(--bg-app); /* Match body for continuous feel */
+      background-color: var(--bg-app);
       border-right: 1px solid var(--border-subtle);
       display: flex; flex-direction: column;
       padding: 24px 16px;
@@ -60,7 +64,7 @@ import { UiService } from '../../services/ui.service';
       display: flex; align-items: center; justify-content: center; 
       font-weight: 700; 
     }
-    .title { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; }
+    .title { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; color: var(--text-primary); }
 
     .section-title { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; padding-left: 12px; letter-spacing: 0.05em; }
 
@@ -69,14 +73,21 @@ import { UiService } from '../../services/ui.service';
       padding: 10px 12px; margin-bottom: 4px;
       color: var(--text-secondary); text-decoration: none;
       border-radius: 8px; transition: all 0.2s;
-      font-size: 0.9rem;
+      font-size: 0.9rem; cursor: pointer;
     }
     .nav-item:hover { background-color: var(--bg-elevated); color: var(--text-primary); }
-    .nav-item.active { background-color: var(--bg-elevated); color: var(--accent); border: 1px solid var(--border-medium); }
+    
+    .nav-item.active { 
+      background-color: var(--bg-elevated); 
+      color: var(--accent); 
+      border: 1px solid var(--border-medium); 
+    }
     .nav-item .material-icons { font-size: 20px; }
+    
+    .mt-4 { margin-top: 24px; }
 
     .profile { margin-top: auto; display: flex; align-items: center; gap: 12px; padding: 12px; border-top: 1px solid var(--border-subtle); }
-    .avatar { width: 32px; height: 32px; background: var(--bg-surface); border-radius: 50%; border: 1px solid var(--border-medium); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; }
+    .avatar { width: 32px; height: 32px; background: var(--bg-surface); border-radius: 50%; border: 1px solid var(--border-medium); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: var(--text-primary); }
     .name { font-size: 0.85rem; font-weight: 500; color: var(--text-primary); }
     .role { font-size: 0.75rem; color: var(--text-muted); }
   `]

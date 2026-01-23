@@ -1,37 +1,97 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Employee } from '../models/employee.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class EmployeeService {
+  // THE REAL DATA
   private employees: Employee[] = [
-    { id: 1, firstName: 'Liam', lastName: 'Novak', email: 'liam@novak.dev', role: 'Frontend Lead', department: 'Engineering', status: 'Active' },
-    { id: 2, firstName: 'Emma', lastName: 'Clarke', email: 'emma@design.io', role: 'UX Researcher', department: 'Design', status: 'Active' },
-    { id: 3, firstName: 'Noah', lastName: 'Reddy', email: 'noah@prod.net', role: 'Product Manager', department: 'Product', status: 'Inactive' },
-    { id: 4, firstName: 'Sarah', lastName: 'Jenkins', email: 'sarah@hr.com', role: 'Talent Acquisition', department: 'HR', status: 'Active' }
+    { 
+      id: 1, 
+      firstName: 'Mandar', 
+      lastName: 'Waigaonkar', 
+      email: 'waigaonkarmandar@gmail.com', 
+      department: 'Engineering', 
+      role: 'Tech Lead', 
+      status: 'Active' 
+    },
+    { 
+      id: 2, 
+      firstName: 'Charushree', 
+      lastName: '.S', 
+      email: 'charushree.s@gmail.com', 
+      department: 'Design', 
+      role: 'Senior UX Designer', 
+      status: 'Active' 
+    },
+    { 
+      id: 3, 
+      firstName: 'Sarthak', 
+      lastName: 'Sharma', 
+      email: 'sarthak@gmail.com', 
+      department: 'Engineering', 
+      role: 'Frontend Developer', 
+      status: 'Active' 
+    },
+    { 
+      id: 4, 
+      firstName: 'Akshat', 
+      lastName: 'Tiwari', 
+      email: 'akshat@gmail.com', 
+      department: 'Product', 
+      role: 'Product Manager', 
+      status: 'Active' 
+    },
+    { 
+      id: 5, 
+      firstName: 'Adithya', 
+      lastName: 'Raj', 
+      email: 'adithyaraj@gmail.com', 
+      department: 'Engineering', 
+      role: 'Backend Developer', 
+      status: 'Inactive' 
+    },
+    { 
+      id: 6, 
+      firstName: 'Akhil', 
+      lastName: 'Joji', 
+      email: 'akhil.joji@gmail.com', 
+      department: 'HR', 
+      role: 'HR Specialist', 
+      status: 'Active' 
+    }
   ];
-  private sub = new BehaviorSubject<Employee[]>(this.employees);
 
-  getEmployees() { return this.sub.asObservable(); }
-  
-  getEmployee(id: number) { return this.employees.find(e => e.id === id); }
+  private employeesSubject = new BehaviorSubject<Employee[]>(this.employees);
 
-  addEmployee(emp: Employee) {
-    emp.id = Math.max(0, ...this.employees.map(e => e.id)) + 1;
-    this.employees = [emp, ...this.employees]; // Add to top
-    this.sub.next(this.employees);
+  constructor() { }
+
+  getEmployees(): Observable<Employee[]> {
+    return this.employeesSubject.asObservable();
   }
 
-  updateEmployee(emp: Employee) {
-    const idx = this.employees.findIndex(e => e.id === emp.id);
-    if (idx !== -1) {
-      this.employees[idx] = emp;
-      this.sub.next([...this.employees]);
+  getEmployeeById(id: number): Employee | undefined {
+    return this.employees.find(e => e.id === id);
+  }
+
+  addEmployee(employee: Employee): void {
+    employee.id = this.employees.length > 0 ? Math.max(...this.employees.map(e => e.id)) + 1 : 1;
+    this.employees.unshift(employee); // Add to top of list
+    this.employeesSubject.next([...this.employees]);
+  }
+
+  updateEmployee(updatedEmployee: Employee): void {
+    const index = this.employees.findIndex(e => e.id === updatedEmployee.id);
+    if (index !== -1) {
+      this.employees[index] = updatedEmployee;
+      this.employeesSubject.next([...this.employees]);
     }
   }
 
-  deleteEmployee(id: number) {
+  deleteEmployee(id: number): void {
     this.employees = this.employees.filter(e => e.id !== id);
-    this.sub.next([...this.employees]);
+    this.employeesSubject.next([...this.employees]);
   }
 }
