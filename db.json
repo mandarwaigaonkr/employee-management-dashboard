@@ -1,0 +1,94 @@
+{
+  "employees": [
+    {
+      "id": "1",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "department": "Engineering",
+      "role": "Software Engineer",
+      "salary": 90000,
+      "dateJoined": "2023-01-15"
+    },
+    {
+      "id": "2",
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "department": "Engineering",
+      "role": "Senior Developer",
+      "salary": 120000,
+      "dateJoined": "2021-05-10"
+    },
+    {
+      "id": "3",
+      "name": "Robert Brown",
+      "email": "robert.brown@example.com",
+      "department": "HR",
+      "role": "HR Manager",
+      "salary": 85000,
+      "dateJoined": "2022-03-20"
+    },
+    {
+      "id": "4",
+      "name": "Emily Davis",
+      "email": "emily.davis@example.com",
+      "department": "Marketing",
+      "role": "Marketing Specialist",
+      "salary": 75000,
+      "dateJoined": "2023-07-01"
+    },
+    {
+      "id": "5",
+      "name": "Michael Wilson",
+      "email": "michael.wilson@example.com",
+      "department": "Sales",
+      "role": "Sales Executive",
+      "salary": 95000,
+      "dateJoined": "2020-11-15"
+    },
+    {
+      "id": "6",
+      "name": "Sarah Taylor",
+      "email": "sarah.taylor@example.com",
+      "department": "Finance",
+      "role": "Financial Analyst",
+      "salary": 110000,
+      "dateJoined": "2019-08-22"
+    },
+    {
+      "id": "7",
+      "name": "David Anderson",
+      "email": "david.anderson@example.com",
+      "department": "Engineering",
+      "role": "DevOps Engineer",
+      "salary": 105000,
+      "dateJoined": "2021-02-14"
+    },
+    {
+      "id": "8",
+      "name": "Laura Thomas",
+      "email": "laura.thomas@example.com",
+      "department": "HR",
+      "role": "Recruiter",
+      "salary": 65000,
+      "dateJoined": "2022-09-05"
+    },
+    {
+      "id": "9",
+      "name": "James Jackson",
+      "email": "james.jackson@example.com",
+      "department": "Marketing",
+      "role": "SEO Specialist",
+      "salary": 80000,
+      "dateJoined": "2020-04-12"
+    },
+    {
+      "id": "10",
+      "name": "Olivia White",
+      "email": "olivia.white@example.com",
+      "department": "Sales",
+      "role": "Sales Manager",
+      "salary": 125000,
+      "dateJoined": "2018-12-01"
+    }
+  ]
+}
