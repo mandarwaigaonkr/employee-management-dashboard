@@ -23,8 +23,8 @@ export class EmployeeService {
     return this.http.post<Employee>(this.apiUrl, employee);
   }
 
-  updateEmployee(id: string | number, employee: Employee): Observable<Employee> {
-    return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee);
+  updateEmployee(id: string | number, employee: Partial<Employee>): Observable<Employee> {
+    return this.http.patch<Employee>(`${this.apiUrl}/${id}`, employee);
   }
 
   deleteEmployee(id: string | number): Observable<void> {

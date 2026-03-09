@@ -1,7 +1,15 @@
-<mat-toolbar color="primary">
-  <span>Employee Dashboard</span>
-  <span class="spacer"></span>
-  <button mat-button routerLink="/home">Home</button>
-  <button mat-button routerLink="/employees">Employees</button>
-  <button mat-button routerLink="/add-employee">Add Employee</button>
+<mat-toolbar class="dashboard-toolbar">
+  <div class="brand">
+    <span class="brand-mark">ED</span>
+    <div class="brand-copy">
+      <span class="brand-title">Employee Dashboard</span>
+      <span class="brand-subtitle">Team pulse at a glance</span>
+    </div>
+  </div>
+
+  <nav class="toolbar-nav">
+    <a mat-button routerLink="/home" routerLinkActive="active-link">Overview</a>
+    <a mat-button routerLink="/employees" routerLinkActive="active-link">Directory</a>
+    <a mat-flat-button color="primary" routerLink="/add-employee">Add Employee</a>
+  </nav>
 </mat-toolbar>

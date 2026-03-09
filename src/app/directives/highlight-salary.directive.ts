@@ -11,13 +11,15 @@ export class HighlightSalaryDirective implements OnChanges {
 
   ngOnChanges(): void {
     if (this.salary > 100000) {
-      this.renderer.setStyle(this.el.nativeElement, 'background-color', '#e8f5e9'); // Light green
-      this.renderer.setStyle(this.el.nativeElement, 'font-weight', 'bold');
-      this.renderer.setStyle(this.el.nativeElement, 'color', '#2e7d32');
+      this.renderer.setStyle(this.el.nativeElement, 'background-color', 'rgba(34, 197, 94, 0.14)');
+      this.renderer.setStyle(this.el.nativeElement, 'font-weight', '600');
+      this.renderer.setStyle(this.el.nativeElement, 'color', '#86efac');
+      this.renderer.setStyle(this.el.nativeElement, 'border-left', '2px solid rgba(74, 222, 128, 0.7)');
     } else {
       this.renderer.removeStyle(this.el.nativeElement, 'background-color');
       this.renderer.removeStyle(this.el.nativeElement, 'font-weight');
       this.renderer.removeStyle(this.el.nativeElement, 'color');
+      this.renderer.removeStyle(this.el.nativeElement, 'border-left');
     }
   }
 }

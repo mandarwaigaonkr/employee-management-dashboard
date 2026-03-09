@@ -89,6 +89,15 @@
       "role": "Sales Manager",
       "salary": 125000,
       "dateJoined": "2018-12-01"
+    },
+    {
+      "id": "d4e45578-d639-4974-b551-1d7d829ca0e6",
+      "name": "Mandar",
+      "email": "mandar@gmail.com",
+      "department": "Marketing",
+      "role": "CS",
+      "salary": 1000100,
+      "dateJoined": "2026-03-09"
     }
   ]
 }

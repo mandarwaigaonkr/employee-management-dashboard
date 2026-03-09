@@ -1,18 +1,66 @@
-<div class="container" *ngIf="employee">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>{{ employee.name }}</mat-card-title>
-      <mat-card-subtitle>{{ employee.role }} - {{ employee.department }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content class="content">
-      <p><strong>Email:</strong> {{ employee.email }}</p>
-      <p><strong>Salary:</strong> {{ employee.salary | currency }}</p>
-      <p><strong>Date Joined:</strong> {{ employee.dateJoined | date }}</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button color="primary" (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon> Back
-      </button>
-    </mat-card-actions>
-  </mat-card>
-</div>
+<section class="detail-shell fade-in">
+  <article class="surface-card state-card" *ngIf="isLoading">
+    <h2>Loading employee profile...</h2>
+    <p>Fetching the latest record from your directory.</p>
+  </article>
+
+  <article class="surface-card state-card" *ngIf="!isLoading && hasError">
+    <h2>Employee could not be loaded</h2>
+    <p>The selected profile may have been deleted or is currently unavailable.</p>
+    <button mat-flat-button color="primary" type="button" (click)="goBack()">Back to Directory</button>
+  </article>
+
+  <article class="surface-card profile-card" *ngIf="!isLoading && employee">
+    <header class="profile-head">
+      <div class="identity">
+        <span class="avatar">{{ employee.name.slice(0, 1) }}</span>
+        <div>
+          <p class="kicker">Employee Profile</p>
+          <h1>{{ employee.name }}</h1>
+          <p class="subtitle">{{ employee.role }} · {{ employee.department }}</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button mat-stroked-button type="button" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Directory
+        </button>
+        <button mat-flat-button color="primary" type="button" (click)="editEmployee()">
+          <mat-icon>edit</mat-icon>
+          Edit Employee
+        </button>
+      </div>
+    </header>
+
+    <section class="stats-grid">
+      <article class="stat-block">
+        <span>Salary</span>
+        <strong>{{ employee.salary | currency }}</strong>
+      </article>
+      <article class="stat-block">
+        <span>Date Joined</span>
+        <strong>{{ employee.dateJoined | date:'mediumDate' }}</strong>
+      </article>
+      <article class="stat-block">
+        <span>Department</span>
+        <strong>{{ employee.department }}</strong>
+      </article>
+    </section>
+
+    <section class="detail-grid">
+      <article class="info-panel">
+        <h3>Contact</h3>
+        <p class="value">{{ employee.email }}</p>
+      </article>
+
+      <article class="info-panel">
+        <h3>Role Summary</h3>
+        <p class="value">
+          {{ employee.name }} contributes as a {{ employee.role }} in {{ employee.department }} with annual compensation
+          of {{ employee.salary | currency }}.
+        </p>
+      </article>
+    </section>
+  </article>
+</section>

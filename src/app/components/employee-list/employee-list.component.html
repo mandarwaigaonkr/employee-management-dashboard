@@ -1,57 +1,168 @@
-<div class="container">
-  <h2>Employee Directory</h2>
+<section class="dashboard-shell">
+  <header class="dashboard-hero surface-card fade-in">
+    <div class="hero-content">
+      <p class="hero-kicker">Operations Snapshot</p>
+      <h1>People Dashboard</h1>
+      <p class="hero-copy">
+        Monitor department health, salary distribution, and top contributors in one live view.
+      </p>
+    </div>
+    <div class="hero-actions">
+      <button mat-stroked-button type="button" (click)="loadEmployees()">Refresh Data</button>
+      <button mat-flat-button color="primary" routerLink="/add-employee">Add New Employee</button>
+    </div>
+  </header>
 
-  <div class="filters">
-    <mat-form-field appearance="outline">
-      <mat-label>Search</mat-label>
-      <input matInput [(ngModel)]="searchQuery" (keyup)="applyFilter()" placeholder="Search by name or role">
-    </mat-form-field>
+  <section class="metrics-grid fade-in delay-1">
+    <article class="surface-card metric" *ngFor="let metric of metrics; trackBy: trackByMetric">
+      <div>
+        <p class="metric-label">{{ metric.title }}</p>
+        <h2>{{ metric.value }}</h2>
+        <p class="metric-helper">{{ metric.helper }}</p>
+      </div>
+      <div class="metric-icon">
+        <mat-icon>{{ metric.icon }}</mat-icon>
+      </div>
+    </article>
+  </section>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Department</mat-label>
-      <mat-select [(ngModel)]="selectedDepartment" (selectionChange)="applyFilter()">
-        <mat-option *ngFor="let dept of departments" [value]="dept">
-          {{ dept }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+  <section class="insights-grid fade-in delay-2">
+    <article class="surface-card insight-card">
+      <div class="insight-headline">
+        <h3>Department Split</h3>
+        <span>{{ filteredCount }} team members</span>
+      </div>
 
-  <div class="mat-elevation-z8 table-container">
+      <div class="pie-layout" *ngIf="departmentInsights.length; else noDataTemplate">
+        <div class="pie-wrap">
+          <div class="pie-chart" [style.background]="departmentPieGradient"></div>
+          <div class="pie-center">{{ filteredCount }}</div>
+        </div>
+
+        <div class="department-list">
+          <div class="department-row" *ngFor="let insight of departmentInsights; trackBy: trackByDepartment">
+            <div class="department-title">
+              <span class="dot" [style.background]="insight.color"></span>
+              <span>{{ insight.department }}</span>
+            </div>
+            <div class="department-meta">
+              <strong>{{ insight.share | number:'1.0-0' }}%</strong>
+              <small>{{ insight.count }} members</small>
+              <small>Avg {{ insight.avgSalary | currency }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="surface-card insight-card">
+      <div class="insight-headline">
+        <h3>Salary Bands</h3>
+        <span>Current filtered mix</span>
+      </div>
+
+      <div class="band-stack" *ngIf="salaryBandInsights.length; else noDataTemplate">
+        <div class="band-row" *ngFor="let band of salaryBandInsights; trackBy: trackByBand">
+          <div class="band-labels">
+            <span>{{ band.label }}</span>
+            <strong>{{ band.count }} · {{ band.share | number:'1.0-0' }}%</strong>
+          </div>
+          <div class="bar-track">
+            <span class="bar-fill" [style.width.%]="band.share" [style.background]="band.color"></span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="surface-card insight-card top-earners">
+      <div class="insight-headline">
+        <h3>Top Earners</h3>
+        <span>Highest salary in view</span>
+      </div>
+
+      <div class="earner-list" *ngIf="topEarners.length; else noDataTemplate">
+        <button
+          class="earner-row"
+          *ngFor="let employee of topEarners; trackBy: trackByEmployee"
+          (click)="viewEmployee(employee.id)"
+          type="button"
+        >
+          <div>
+            <p>{{ employee.name }}</p>
+            <small>{{ employee.role }} · {{ employee.department }}</small>
+          </div>
+          <strong>{{ employee.salary | currency }}</strong>
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <section class="surface-card controls fade-in delay-3">
+    <div class="controls-copy">
+      <h3>Directory</h3>
+      <p>Find, filter, and manage your team list.</p>
+      <div class="directory-meta">
+        <span>{{ filteredCount }} visible</span>
+        <span>{{ dataSource.data.length }} total records</span>
+      </div>
+    </div>
+
+    <div class="filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchQuery"
+          (keyup)="applyFilter()"
+          placeholder="Name, role, or email"
+        >
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Department</mat-label>
+        <mat-select [(ngModel)]="selectedDepartment" (selectionChange)="applyFilter()">
+          <mat-option *ngFor="let dept of departments" [value]="dept">
+            {{ dept }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </section>
+
+  <section class="surface-card table-container fade-in delay-4">
     <table mat-table [dataSource]="dataSource" matSort>
-
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
       </ng-container>
 
       <ng-container matColumnDef="department">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Department </th>
-        <td mat-cell *matCellDef="let element"> {{element.department}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
+        <td mat-cell *matCellDef="let element">{{ element.department }}</td>
       </ng-container>
 
       <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
-        <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+        <td mat-cell *matCellDef="let element">{{ element.role }}</td>
       </ng-container>
 
       <ng-container matColumnDef="salary">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Salary </th>
-        <td mat-cell *matCellDef="let element" appHighlightSalary [salary]="element.salary"> 
-          {{element.salary | currency}} 
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Salary</th>
+        <td mat-cell *matCellDef="let element" appHighlightSalary [salary]="element.salary">
+          {{ element.salary | currency }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Actions </th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="primary" (click)="viewEmployee(element.id)">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element" class="action-cell">
+          <button mat-icon-button (click)="viewEmployee(element.id)" aria-label="View employee">
             <mat-icon>visibility</mat-icon>
           </button>
-          <button mat-icon-button color="accent" (click)="editEmployee(element.id)">
+          <button mat-icon-button (click)="editEmployee(element.id)" aria-label="Edit employee">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteEmployee(element.id)">
+          <button mat-icon-button (click)="deleteEmployee(element.id)" aria-label="Delete employee">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
@@ -59,8 +170,15 @@
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-results-cell" colspan="5">No employees found with the current filters.</td>
+      </tr>
     </table>
 
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
-</div>
+  </section>
+</section>
+
+<ng-template #noDataTemplate>
+  <div class="no-data">No employees match the current filters.</div>
+</ng-template>
